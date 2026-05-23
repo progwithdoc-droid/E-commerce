@@ -71,9 +71,9 @@
   - [ ] Recharts for analytics
   - [ ] Resend for emails
   - [ ] Uploadthing for file uploads
-  - [ ] Prisma ORM
+  - [X] Prisma ORM
   - [X] PostgreSQL database (Neon project created; paste DATABASE_URL in .env)
-  - [ ] NextAuth.js v5 (Auth.js beta)
+  - [X] NextAuth.js v5 (Auth.js beta)
   - [ ] Stripe for payments
   - [X] Framer Motion
   - [X] Lenis smooth scroll
@@ -84,79 +84,79 @@
 - [ ] Create lib/utils.ts with cn() helper (clsx + tailwind-merge)
 - [X] Create lib/env.ts with Zod environment variable validation
 - [ ] Create constants/animations.ts with fadeUp, staggerContainer, fadeIn variants
-- [ ] Create types/index.ts with all shared TypeScript types
+- [X] Create types/index.ts with all shared TypeScript types
 
 ### 2. Database and Authentication [X]
 
 - [X] Set up PostgreSQL database (Neon)
 - [X] Wire Neon driver (@neondatabase/serverless — lib/db.ts, GET /api/db; verify after DATABASE_URL is in .env)
 - [X] Database schema created (db/schema.sql — users, auth, catalog, orders, cart, wishlist)
-- [ ] Configure Prisma schema with all models (optional; raw SQL migration in place):
-  - User (id, name, email, password, role, createdAt, updatedAt)
-  - Account, Session, VerificationToken (NextAuth adapter models)
-  - Product (id, name, slug, description, price, comparePrice, images, stock, sku, categoryId)
-  - Category (id, name, slug, description, image)
-  - Order (id, orderNumber, userId, total, status, stripePaymentId, shippingAddress)
-  - OrderItem (id, orderId, productId, quantity, size, price)
-  - Review (id, userId, productId, rating, comment, createdAt)
-  - Cart (id, userId unique) + CartItem (id, cartId, productId, quantity, size)
-  - Address (id, userId, name, street, city, state, zip, country, isDefault)
-  - Wishlist (id, userId, productId, createdAt)
-- [] Implement NextAuth.js v5 authentication:
-  - lib/auth.ts — main config with Prisma adapter
-  - lib/auth.config.ts — edge-compatible config
-  - middleware.ts — protect /account/* and /admin/* routes
-  - Credentials provider with bcrypt password validation
-  - Google + GitHub OAuth providers
-  - Session callback adds user.id and user.role to token
-  - Pages: signIn: '/login', error: '/login'
+- [X] Configure Prisma schema with all models (prisma/schema.prisma + lib/prisma.ts):
+  - [X] User (id, name, email, password, role, createdAt, updatedAt)
+  - [X] Account, Session, VerificationToken (NextAuth adapter models)
+  - [X] Product (id, name, slug, description, price, comparePrice, images, stock, sku, categoryId)
+  - [X] Category (id, name, slug, description, image)
+  - [X] Order (id, orderNumber, userId, total, status, stripePaymentId, shippingAddress)
+  - [X] OrderItem (id, orderId, productId, quantity, size, price)
+  - [X] Review (id, userId, productId, rating, comment, createdAt)
+  - [X] Cart (id, userId unique) + CartItem (id, cartId, productId, quantity, size)
+  - [X] Address (id, userId, name, street, city, state, zip, country, isDefault)
+  - [X] Wishlist (id, userId, productId, createdAt)
+- [X] Implement NextAuth.js v5 authentication:
+  - [X] lib/auth.ts — main config with Prisma adapter
+  - [X] lib/auth.config.ts — edge-compatible config
+  - [X] middleware.ts — protect /account/* and /admin/* routes
+  - [X] Credentials provider with bcrypt password validation
+  - [X] Google + GitHub OAuth providers
+  - [X] Session callback adds user.id and user.role to token
+  - [X] Pages: signIn: '/login', error: '/login'
 
 ### 3. Core Features — Customer Side [ ]
 
-- [] Home Layout:
-  - Create `(home)` route group in `app/` directory
-  - app/(home)/layout.tsx — Header + Footer + CartDrawer + LenisProvider
-  - components/home/Header.tsx — fixed nav, backdrop-blur on scroll, cart badge, auth state
-  - components/home/Footer.tsx — 4-column grid, social icons, nav links
-- [] Homepage (app/(home)/page.tsx):
-  - Fetches getFeaturedProducts() + getCategories() via Server Actions
-  - React Suspense boundaries with skeleton fallbacks
-  - Wires HeroSection cart badge to useCartCount()
-  - components/home/FeaturedProducts.tsx — 3-column grid, Quick Add hover bar
-  - components/home/CategoryGrid.tsx — 4-column masonry, Framer Motion stagger reveal
-- [] Products Catalog (app/(home)/products/page.tsx):
-  - Server Component reads searchParams (category, search, sort, page)
-  - components/home/ProductFilters.tsx — category checkboxes, price range slider, sort
-  - components/home/ProductGrid.tsx — 3-column grid, empty state
-  - components/home/Pagination.tsx — URL-based page navigation
-  - app/(home)/products/loading.tsx — skeleton grid
-- [] Product Detail (app/(home)/products/[slug]/page.tsx):
-  - getProductBySlug(slug), notFound() if null
-  - generateMetadata export for SEO
-  - components/home/ProductDetail.tsx — image gallery, size selector, qty, Add to Cart
-  - components/home/ProductReviews.tsx — rating summary, review cards, pagination
-  - components/home/ReviewForm.tsx — star rating selector, comment, submit
-  - Related products section (same category, max 4)
-- [] Shopping Cart:
-  - store/cart.store.ts — Zustand + immer + localStorage persistence
-  - addItem / removeItem / updateQuantity / clearCart / toggleCart
-  - useCartTotal() + useCartCount() derived selectors
-  - components/home/CartDrawer.tsx — slides from right, item list, subtotal, Checkout CTA
-- [] Checkout Process:
-  - app/(home)/checkout/page.tsx — auth-required, renders CheckoutForm
-  - components/home/CheckoutForm.tsx — shipping info (RHF + Zod), order summary, Pay button
-  - actions/checkout.actions.ts — createCheckoutSession, server-side price validation
-  - app/api/webhooks/stripe/route.ts — handles checkout.session.completed
-  - app/(home)/checkout/success/page.tsx — order confirmation, clearCart
-  - lib/stripe.ts — Stripe singleton
-- [] User Dashboard:
-  - app/(home)/account/layout.tsx — auth guard, sidebar nav
-  - app/(home)/account/orders/page.tsx — order history table
-  - app/(home)/account/orders/[id]/page.tsx — full order detail
-  - app/(home)/account/profile/page.tsx — name, email, avatar (UploadThing), password change
-  - app/(home)/account/addresses/page.tsx — list, add, edit, delete, set default
-  - app/(home)/account/wishlist/page.tsx — grid, Move to Cart button
-  - actions/account.actions.ts — updateProfile, changePassword, address CRUD, toggleWishlist
+- [X] Home Layout:
+  - [X] Create `(home)` route group in `app/` directory
+  - [X] app/(home)/layout.tsx — Navigation + Footer (CartDrawer/Lenis in root layout)
+  - [X] Navigation — fixed nav, cart badge, auth state (existing component)
+  - [X] Footer — existing sections/Footer.tsx
+- [X] Homepage (app/(home)/page.tsx):
+  - [X] Fetches getFeaturedProducts() + getCategories() via Server Actions
+  - [X] React Suspense boundaries with skeleton fallbacks
+  - [X] components/home/FeaturedProducts.tsx — DB products, Quick Add
+  - [X] components/home/CategoryGrid.tsx — category links from DB
+- [X] Products Catalog (app/(home)/products/page.tsx):
+  - [X] Server Component reads searchParams (category, search, sort, page)
+  - [X] components/home/ProductFilters.tsx — category + sort
+  - [X] components/home/CatalogProductGrid.tsx — grid, empty state
+  - [X] components/home/Pagination.tsx — URL-based navigation
+  - [X] app/(home)/products/loading.tsx — skeleton grid
+- [X] Product Detail (app/(home)/products/[slug]/page.tsx):
+  - [X] getProductBySlug(slug), notFound() if null
+  - [X] generateMetadata export for SEO
+  - [X] components/home/ProductDetail.tsx — gallery, qty, Add to Cart
+  - [ ] components/home/ProductReviews.tsx — pending
+  - [ ] components/home/ReviewForm.tsx — pending
+  - [X] Related products section (same category, max 4)
+- [X] Shopping Cart:
+  - [X] store/cart.ts — Zustand + localStorage persistence
+  - [X] addItem / removeItem / updateQuantity / clearCart / toggleCart
+  - [X] useCartTotal() + useCartCount() derived selectors
+  - [X] CartDrawer — Checkout link to /checkout
+- [ ] Checkout Process:
+  - [X] app/(home)/checkout/page.tsx — auth-required (stub)
+  - [ ] components/home/CheckoutForm.tsx — pending
+  - [ ] actions/checkout.actions.ts — pending
+  - [ ] app/api/webhooks/stripe/route.ts — pending
+  - [ ] app/(home)/checkout/success/page.tsx — pending
+  - [ ] lib/stripe.ts — pending
+- [ ] User Dashboard:
+  - [X] app/(home)/account/layout.tsx — auth guard, sidebar nav
+  - [X] app/(home)/account/page.tsx — overview
+  - [ ] app/(home)/account/orders/page.tsx — stub only
+  - [ ] app/(home)/account/orders/[id]/page.tsx — pending
+  - [ ] app/(home)/account/profile/page.tsx — stub only
+  - [ ] app/(home)/account/addresses/page.tsx — stub only
+  - [ ] app/(home)/account/wishlist/page.tsx — stub only
+  - [ ] actions/account.actions.ts — pending
 
 ### 4. Admin Dashboard [ ]
 

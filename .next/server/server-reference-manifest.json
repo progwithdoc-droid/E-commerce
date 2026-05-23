@@ -1,5 +1,54 @@
 {
-  "node": {},
+  "node": {
+    "226a584d06d2ac573d2e278eb745b24c58063109": {
+      "workers": {
+        "app/(home)/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cavoys%5C%5CDownloads%5C%5Caurum-store%5C%5Capp%5C%5Cactions%5C%5Cproducts.ts%22%2C%5B%22getProductBySlug%22%2C%22getFeaturedProducts%22%2C%22getCategories%22%2C%22getProducts%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/(home)/page": "rsc"
+      }
+    },
+    "2ede527bbed163a9105861bbafea6a1cd4a2f662": {
+      "workers": {
+        "app/(home)/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cavoys%5C%5CDownloads%5C%5Caurum-store%5C%5Capp%5C%5Cactions%5C%5Cproducts.ts%22%2C%5B%22getProductBySlug%22%2C%22getFeaturedProducts%22%2C%22getCategories%22%2C%22getProducts%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/(home)/page": "rsc"
+      }
+    },
+    "4e1cfc33791b83e00cdeba7c1d11f34f936baa3b": {
+      "workers": {
+        "app/(home)/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cavoys%5C%5CDownloads%5C%5Caurum-store%5C%5Capp%5C%5Cactions%5C%5Cproducts.ts%22%2C%5B%22getProductBySlug%22%2C%22getFeaturedProducts%22%2C%22getCategories%22%2C%22getProducts%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/(home)/page": "rsc"
+      }
+    },
+    "c5ea892f17b55609f68843f2d4b2c1b9513545f1": {
+      "workers": {
+        "app/(home)/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cavoys%5C%5CDownloads%5C%5Caurum-store%5C%5Capp%5C%5Cactions%5C%5Cproducts.ts%22%2C%5B%22getProductBySlug%22%2C%22getFeaturedProducts%22%2C%22getCategories%22%2C%22getProducts%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/(home)/page": "rsc"
+      }
+    },
+    "5961d3a161837ea0c3ed761f5fa00ec5f9857e24": {
+      "workers": {
+        "app/login/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cavoys%5C%5CDownloads%5C%5Caurum-store%5C%5Capp%5C%5Cactions%5C%5Cauth.ts%22%2C%5B%22registerUser%22%2C%22loginUser%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/login/page": "action-browser"
+      }
+    },
+    "f494d7fbf73404f38027596ab7e081a84f050717": {
+      "workers": {
+        "app/login/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cavoys%5C%5CDownloads%5C%5Caurum-store%5C%5Capp%5C%5Cactions%5C%5Cauth.ts%22%2C%5B%22registerUser%22%2C%22loginUser%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/login/page": "action-browser"
+      }
+    }
+  },
   "edge": {},
-  "encryptionKey": "iIs5UvVWMJ2vh/eSK9xDhSq9M+SnGgIlRhWQPCqdl58="
+  "encryptionKey": "7ZCsRVm77wdZZHQfnbRcVthXFzsrFWD1AZw7jlA8Dzo="
 }

@@ -4,6 +4,7 @@ import "./globals.css"
 import { SmoothScroll } from "./components/SmoothScroll"
 import { CustomCursor } from "./components/CustomCursor"
 import { CartDrawer } from "./components/CartDrawer"
+import { SessionProvider } from "./components/providers/SessionProvider"
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -39,11 +40,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${cormorant.variable} ${bebas.variable} ${inter.variable}`}>
       <body className="bg-void text-cream overflow-x-hidden">
-        <SmoothScroll>
-          <CustomCursor />
-          <CartDrawer />
-          {children}
-        </SmoothScroll>
+        <SessionProvider>
+          <SmoothScroll>
+            <CustomCursor />
+            <CartDrawer />
+            {children}
+          </SmoothScroll>
+        </SessionProvider>
       </body>
     </html>
   )

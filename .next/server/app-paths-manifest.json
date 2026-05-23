@@ -1,4 +1,10 @@
 {
-  "/api/db/route": "app/api/db/route.js",
-  "/page": "app/page.js"
+  "/_not-found/page": "app/_not-found/page.js",
+  "/login/page": "app/login/page.js",
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/(home)/page": "app/(home)/page.js",
+  "/(home)/account/page": "app/(home)/account/page.js",
+  "/(home)/account/orders/page": "app/(home)/account/orders/page.js",
+  "/(home)/account/profile/page": "app/(home)/account/profile/page.js",
+  "/(home)/account/addresses/page": "app/(home)/account/addresses/page.js"
 }

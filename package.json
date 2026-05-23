@@ -7,21 +7,31 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:migrate": "tsx --env-file=.env scripts/migrate.ts"
+    "db:migrate": "tsx --env-file=.env scripts/migrate.ts",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio",
+    "db:test": "tsx --env-file=.env scripts/test-prisma.ts",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.11.2",
     "@neondatabase/serverless": "^1.1.0",
+    "@prisma/client": "^5.22.0",
     "all": "^0.0.0",
+    "bcryptjs": "^3.0.3",
     "framer-motion": "^11.0.0",
     "lenis": "^1.0.0",
     "lucide-react": "^0.344.0",
     "next": "14.2.0",
+    "next-auth": "^5.0.0-beta.31",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
     "zod": "^4.4.3",
     "zustand": "^4.5.0"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20.11.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
@@ -29,6 +39,7 @@
     "eslint": "^8.57.0",
     "eslint-config-next": "14.2.0",
     "postcss": "^8.4.0",
+    "prisma": "^5.22.0",
     "tailwindcss": "^3.4.0",
     "tsx": "^4.19.0",
     "typescript": "^5.4.0"

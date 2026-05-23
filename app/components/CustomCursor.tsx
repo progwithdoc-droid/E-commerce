@@ -1,28 +1,35 @@
-"use client"
+'use client'
 
-import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
+import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 
 export function CustomCursor() {
+  const [mounted, setMounted] = useState(false)
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const [isHovering, setIsHovering] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted) return
+
     const moveCursor = (e: MouseEvent) => {
       setPosition({ x: e.clientX, y: e.clientY })
-      if (!isVisible) setIsVisible(true)
+      setIsVisible(true)
     }
 
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement
       if (
-        target.closest("a") ||
-        target.closest("button") ||
+        target.closest('a') ||
+        target.closest('button') ||
         target.closest("[data-cursor='hover']") ||
-        target.closest("input") ||
-        target.closest("textarea") ||
-        target.closest("select")
+        target.closest('input') ||
+        target.closest('textarea') ||
+        target.closest('select')
       ) {
         setIsHovering(true)
       }
@@ -31,29 +38,30 @@ export function CustomCursor() {
     const handleMouseOut = (e: MouseEvent) => {
       const target = e.target as HTMLElement
       if (
-        target.closest("a") ||
-        target.closest("button") ||
+        target.closest('a') ||
+        target.closest('button') ||
         target.closest("[data-cursor='hover']") ||
-        target.closest("input") ||
-        target.closest("textarea") ||
-        target.closest("select")
+        target.closest('input') ||
+        target.closest('textarea') ||
+        target.closest('select')
       ) {
         setIsHovering(false)
       }
     }
 
-    window.addEventListener("mousemove", moveCursor)
-    document.addEventListener("mouseover", handleMouseOver)
-    document.addEventListener("mouseout", handleMouseOut)
+    window.addEventListener('mousemove', moveCursor)
+    document.addEventListener('mouseover', handleMouseOver)
+    document.addEventListener('mouseout', handleMouseOut)
 
     return () => {
-      window.removeEventListener("mousemove", moveCursor)
-      document.removeEventListener("mouseover", handleMouseOver)
-      document.removeEventListener("mouseout", handleMouseOut)
+      window.removeEventListener('mousemove', moveCursor)
+      document.removeEventListener('mouseover', handleMouseOver)
+      document.removeEventListener('mouseout', handleMouseOut)
     }
-  }, [isVisible])
+  }, [mounted])
 
-  if (typeof window === "undefined") return null
+  // Avoid hydration mismatch: render nothing until client mount
+  if (!mounted) return null
 
   return (
     <motion.div
@@ -66,15 +74,15 @@ export function CustomCursor() {
         opacity: isVisible ? 1 : 0,
       }}
       transition={{
-        type: "spring",
+        type: 'spring',
         stiffness: 500,
         damping: 28,
         mass: 0.5,
       }}
       style={{
-        borderRadius: "50%",
-        border: isHovering ? "1px solid #F5F0E8" : "none",
-        backgroundColor: isHovering ? "transparent" : "#F5F0E8",
+        borderRadius: '50%',
+        border: isHovering ? '1px solid #F5F0E8' : 'none',
+        backgroundColor: isHovering ? 'transparent' : '#F5F0E8',
       }}
     />
   )

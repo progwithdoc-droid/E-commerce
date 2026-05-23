@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion"
 import { X, Plus, Minus, Trash2 } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 import { useCart } from "../store/cart"
 
 export function CartDrawer() {
@@ -130,12 +131,13 @@ export function CartDrawer() {
                   <span className="font-body text-sm text-muted">Subtotal</span>
                   <span className="font-body text-lg text-cream">${subtotal}</span>
                 </div>
-                <button
-                  onClick={clearCart}
-                  className="w-full py-3 bg-electric text-void font-body text-sm tracking-[0.18em] uppercase hover:bg-cream transition-colors duration-300"
+                <Link
+                  href="/checkout"
+                  onClick={() => setCartOpen(false)}
+                  className="block w-full py-3 text-center bg-electric text-void font-body text-sm tracking-[0.18em] uppercase hover:bg-cream transition-colors duration-300"
                 >
                   Checkout
-                </button>
+                </Link>
                 <p className="font-body text-xs text-caption text-center">
                   Shipping & taxes calculated at checkout
                 </p>

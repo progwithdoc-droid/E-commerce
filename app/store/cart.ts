@@ -1,6 +1,7 @@
-"use client"
+'use client'
 
-import { create } from "zustand"
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 
 export interface CartItem {
   id: string
@@ -14,7 +15,7 @@ export interface CartItem {
 interface CartState {
   items: CartItem[]
   isOpen: boolean
-  addToCart: (item: Omit<CartItem, "quantity">) => void
+  addToCart: (item: Omit<CartItem, 'quantity'>) => void
   removeFromCart: (id: string) => void
   updateQuantity: (id: string, quantity: number) => void
   clearCart: () => void
@@ -24,38 +25,51 @@ interface CartState {
   subtotal: () => number
 }
 
-export const useCart = create<CartState>((set, get) => ({
-  items: [],
-  isOpen: false,
-  addToCart: (item) => {
-    const existing = get().items.find((i) => i.id === item.id)
-    if (existing) {
-      set({
-        items: get().items.map((i) =>
-          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
-        ),
-      })
-    } else {
-      set({ items: [...get().items, { ...item, quantity: 1 }] })
-    }
-  },
-  removeFromCart: (id) => {
-    set({ items: get().items.filter((i) => i.id !== id) })
-  },
-  updateQuantity: (id, quantity) => {
-    if (quantity <= 0) {
-      set({ items: get().items.filter((i) => i.id !== id) })
-    } else {
-      set({
-        items: get().items.map((i) =>
-          i.id === id ? { ...i, quantity } : i
-        ),
-      })
-    }
-  },
-  clearCart: () => set({ items: [] }),
-  toggleCart: () => set({ isOpen: !get().isOpen }),
-  setCartOpen: (open) => set({ isOpen: open }),
-  totalItems: () => get().items.reduce((sum, i) => sum + i.quantity, 0),
-  subtotal: () => get().items.reduce((sum, i) => sum + i.price * i.quantity, 0),
-}))
+export const useCart = create<CartState>()(
+  persist(
+    (set, get) => ({
+      items: [],
+      isOpen: false,
+      addToCart: (item) => {
+        const existing = get().items.find((i) => i.id === item.id)
+        if (existing) {
+          set({
+            items: get().items.map((i) =>
+              i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
+            ),
+          })
+        } else {
+          set({ items: [...get().items, { ...item, quantity: 1 }] })
+        }
+      },
+      removeFromCart: (id) => {
+        set({ items: get().items.filter((i) => i.id !== id) })
+      },
+      updateQuantity: (id, quantity) => {
+        if (quantity <= 0) {
+          set({ items: get().items.filter((i) => i.id !== id) })
+        } else {
+          set({
+            items: get().items.map((i) =>
+              i.id === id ? { ...i, quantity } : i
+            ),
+          })
+        }
+      },
+      clearCart: () => set({ items: [] }),
+      toggleCart: () => set({ isOpen: !get().isOpen }),
+      setCartOpen: (open) => set({ isOpen: open }),
+      totalItems: () => get().items.reduce((sum, i) => sum + i.quantity, 0),
+      subtotal: () => get().items.reduce((sum, i) => sum + i.price * i.quantity, 0),
+    }),
+    { name: 'aurum-cart' }
+  )
+)
+
+export function useCartCount() {
+  return useCart((s) => s.items.reduce((sum, i) => sum + i.quantity, 0))
+}
+
+export function useCartTotal() {
+  return useCart((s) => s.items.reduce((sum, i) => sum + i.price * i.quantity, 0))
+}
