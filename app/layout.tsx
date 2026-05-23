@@ -5,6 +5,7 @@ import { SmoothScroll } from "./components/SmoothScroll"
 import { CustomCursor } from "./components/CustomCursor"
 import { CartDrawer } from "./components/CartDrawer"
 import { SessionProvider } from "./components/providers/SessionProvider"
+import { Toaster } from "sonner"
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -45,6 +46,17 @@ export default function RootLayout({
             <CustomCursor />
             <CartDrawer />
             {children}
+            <Toaster
+              position="bottom-right"
+              theme="dark"
+              toastOptions={{
+                style: {
+                  background: '#0D0D0D',
+                  border: '1px solid rgba(245,240,232,0.15)',
+                  color: '#F5F0E8',
+                },
+              }}
+            />
           </SmoothScroll>
         </SessionProvider>
       </body>

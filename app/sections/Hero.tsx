@@ -3,6 +3,7 @@
 import { useRef } from "react"
 import { motion, useScroll, useTransform } from "framer-motion"
 import Image from "next/image"
+import Link from "next/link"
 import { IMAGES } from "../lib/images"
 
 export function Hero() {
@@ -13,7 +14,7 @@ export function Hero() {
   })
 
   const bgY = useTransform(scrollYProgress, [0, 1], [0, 200])
-  const textY = useTransform(scrollYProgress, [0, 1], [0, 100])
+  const textY = useTransform(scrollYProgress, [0, 1], [0, 80])
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
 
   return (
@@ -21,16 +22,10 @@ export function Hero() {
       ref={containerRef}
       className="relative h-screen w-full overflow-hidden bg-void"
     >
-      {/* Background Image with diagonal clip */}
-      <motion.div
-        style={{ y: bgY }}
-        className="absolute inset-0"
-      >
+      <motion.div style={{ y: bgY }} className="absolute inset-0">
         <div
           className="absolute inset-0"
-          style={{
-            clipPath: "polygon(0 0, 55% 0, 45% 100%, 0 100%)",
-          }}
+          style={{ clipPath: "polygon(0 0, 55% 0, 45% 100%, 0 100%)" }}
         >
           <Image
             src={IMAGES[0]}
@@ -39,17 +34,14 @@ export function Hero() {
             priority
             className="object-cover"
           />
-          <div className="absolute inset-0 bg-black/35" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/30 to-transparent" />
         </div>
 
-        {/* Right panel with ghost image */}
         <div
           className="absolute inset-0 bg-void"
-          style={{
-            clipPath: "polygon(55% 0, 100% 0, 100% 100%, 45% 100%)",
-          }}
+          style={{ clipPath: "polygon(55% 0, 100% 0, 100% 100%, 45% 100%)" }}
         >
-          <div className="absolute inset-0 opacity-15">
+          <div className="absolute inset-0 opacity-20">
             <Image
               src={IMAGES[3]}
               alt="Product silhouette"
@@ -57,27 +49,52 @@ export function Hero() {
               className="object-cover"
             />
           </div>
+          <div className="absolute inset-0 bg-gradient-to-l from-void via-void/80 to-transparent" />
         </div>
       </motion.div>
 
-      {/* Massive outlined AURUM text behind */}
+      {/* AURUM — layered wordmark for strong visibility on both panels */}
       <motion.div
         style={{ y: textY, opacity }}
-        className="absolute inset-0 flex items-center justify-start z-0 pointer-events-none"
+        className="absolute inset-0 z-[1] pointer-events-none select-none"
+        aria-hidden
       >
-        <h1
-          className="font-display font-thin text-[22vw] leading-none tracking-tighter whitespace-nowrap"
-          style={{
-            WebkitTextStroke: "1px rgba(255,255,255,0.15)",
-            color: "transparent",
-            marginLeft: "-5vw",
-          }}
-        >
-          AURUM
-        </h1>
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center">
+          {/* Soft glow behind */}
+          <span
+            className="absolute inset-0 font-heading text-[clamp(4rem,22vw,18rem)] leading-[0.85] tracking-[0.04em] text-cream/[0.04] blur-2xl"
+            style={{ transform: "translateY(4px)" }}
+          >
+            AURUM
+          </span>
+          {/* Deep shadow */}
+          <span className="block font-heading text-[clamp(4rem,22vw,18rem)] leading-[0.85] tracking-[0.04em] text-black/50 translate-y-1">
+            AURUM
+          </span>
+          {/* Main stroke — high contrast */}
+          <span
+            className="absolute inset-0 flex items-center justify-center font-heading text-[clamp(4rem,22vw,18rem)] leading-[0.85] tracking-[0.04em]"
+            style={{
+              WebkitTextStroke: "2px rgba(245, 240, 232, 0.55)",
+              color: "transparent",
+              textShadow: "0 0 80px rgba(200, 255, 0, 0.12)",
+            }}
+          >
+            AURUM
+          </span>
+          {/* Electric accent on right half via clip */}
+          <span
+            className="absolute inset-0 flex items-center justify-center font-heading text-[clamp(4rem,22vw,18rem)] leading-[0.85] tracking-[0.04em] text-transparent"
+            style={{
+              WebkitTextStroke: "2px rgba(200, 255, 0, 0.45)",
+              clipPath: "polygon(52% 0, 100% 0, 100% 100%, 42% 100%)",
+            }}
+          >
+            AURUM
+          </span>
+        </div>
       </motion.div>
 
-      {/* Content */}
       <motion.div
         style={{ opacity }}
         className="relative z-10 h-full flex flex-col justify-center px-6 lg:px-16 max-w-3xl"
@@ -97,26 +114,25 @@ export function Hero() {
             The Art of Restraint
           </p>
 
-          <div className="flex items-center gap-4">
-            <a
-              href="#products"
-              className="px-8 py-3 bg-cream text-void font-body text-[11px] tracking-[0.18em] uppercase rounded-full hover:bg-void hover:text-cream border border-cream transition-all duration-300"
+          <div className="flex flex-wrap items-center gap-4">
+            <Link
+              href="/products"
+              className="px-8 py-3 bg-cream text-void font-body text-[11px] tracking-[0.18em] uppercase rounded-full hover:bg-electric hover:text-void border border-cream transition-all duration-300"
               data-cursor="hover"
             >
               Shop Now
-            </a>
-            <a
+            </Link>
+            <Link
               href="#lookbook"
-              className="px-8 py-3 bg-transparent text-cream font-body text-[11px] tracking-[0.18em] uppercase rounded-full border border-cream/40 hover:bg-cream hover:text-void transition-all duration-300"
+              className="px-8 py-3 bg-transparent text-cream font-body text-[11px] tracking-[0.18em] uppercase rounded-full border border-cream/40 hover:border-electric hover:text-electric transition-all duration-300"
               data-cursor="hover"
             >
               View Lookbook
-            </a>
+            </Link>
           </div>
         </motion.div>
       </motion.div>
 
-      {/* Scroll indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

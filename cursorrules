@@ -141,22 +141,22 @@
   - [X] addItem / removeItem / updateQuantity / clearCart / toggleCart
   - [X] useCartTotal() + useCartCount() derived selectors
   - [X] CartDrawer — Checkout link to /checkout
-- [ ] Checkout Process:
-  - [X] app/(home)/checkout/page.tsx — auth-required (stub)
-  - [ ] components/home/CheckoutForm.tsx — pending
-  - [ ] actions/checkout.actions.ts — pending
-  - [ ] app/api/webhooks/stripe/route.ts — pending
-  - [ ] app/(home)/checkout/success/page.tsx — pending
-  - [ ] lib/stripe.ts — pending
-- [ ] User Dashboard:
+- [X] Checkout Process:
+  - [X] app/(home)/checkout/page.tsx — auth-required + CheckoutForm
+  - [X] components/home/CheckoutForm.tsx — shipping + Stripe pay
+  - [X] actions/checkout.ts — createCheckoutSession, server-side price validation
+  - [X] app/api/webhooks/stripe/route.ts — handles checkout.session.completed
+  - [X] app/(home)/checkout/success/page.tsx — order confirmation, clearCart
+  - [X] lib/stripe.ts — Stripe singleton
+- [X] User Dashboard:
   - [X] app/(home)/account/layout.tsx — auth guard, sidebar nav
-  - [X] app/(home)/account/page.tsx — overview
-  - [ ] app/(home)/account/orders/page.tsx — stub only
-  - [ ] app/(home)/account/orders/[id]/page.tsx — pending
-  - [ ] app/(home)/account/profile/page.tsx — stub only
-  - [ ] app/(home)/account/addresses/page.tsx — stub only
-  - [ ] app/(home)/account/wishlist/page.tsx — stub only
-  - [ ] actions/account.actions.ts — pending
+  - [X] app/(home)/account/page.tsx — overview with stats + recent orders
+  - [X] app/(home)/account/orders/page.tsx — order history table
+  - [X] app/(home)/account/orders/[id]/page.tsx — full order detail
+  - [X] app/(home)/account/profile/page.tsx — name, password change
+  - [X] app/(home)/account/addresses/page.tsx — list, add, delete, set default
+  - [X] app/(home)/account/wishlist/page.tsx — grid, Move to Cart button
+  - [X] actions/account.ts — updateProfile, changePassword, address CRUD, toggleWishlist
 
 ### 4. Admin Dashboard [ ]
 
