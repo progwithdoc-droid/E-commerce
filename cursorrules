@@ -1,0 +1,498 @@
+# Cursor Rules
+
+## Instructions
+
+- Record fixes for mistakes or corrections to avoid repetition in the `Lessons` section.
+- Organize thoughts and plan steps before starting a task in the `Scratchpad` section.
+- Clear old tasks if necessary.
+- Use todo markers for progress tracking:
+  - `[X]` Completed tasks
+  - `[ ]` Pending tasks
+- Update Scratchpad after completing subtasks.
+- Reflect and plan after milestones for better task management.
+- Always refer to Scratchpad before planning the next step.
+
+---
+
+## Lessons
+
+1. Use `npx shadcn@latest add [component]` instead of `npx shadcn-ui@latest add [component]` when installing Shadcn UI components.
+2. In Next.js 14+, page props params must be typed as a Promise. Example:
+   ```typescript
+   type tParams = Promise<{ id: string }>
+   interface PageProps {
+     params: tParams
+   }
+   ```
+   Then await the params in the component:
+   ```typescript
+   export default async function Page(props: PageProps) {
+     const { id } = await props.params
+   }
+   ```
+3. Use `const session = await auth()` instead of `const session = await getServerSession(authOptions)` for Next.js authentication. The new `auth()` function is the recommended way to get the session in Next.js Auth v5.
+4. When importing `useRouter` from 'next/navigation', the component must be marked as a client component using the `'use client'` directive at the top of the file, as this hook only works on the client side.
+5. Every Client Component that uses hooks must start with `'use client'`. Never put async/await at the top level of a Client Component — use Server Components for data fetching.
+6. Prisma Client must be instantiated as a singleton to avoid connection exhaustion in dev:
+   ```typescript
+   // lib/prisma.ts
+   import { PrismaClient } from '@prisma/client'
+   const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
+   export const prisma = globalForPrisma.prisma ?? new PrismaClient()
+   if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+   ```
+7. All Stripe webhook handlers must use `req.text()` for raw body parsing — never `req.json()`.
+8. `next/image` requires `remotePatterns` in next.config.js for all external image domains (Unsplash, Cloudinary, UploadThing, etc.).
+9. Zustand stores must use `immer` middleware for complex state or spread explicitly. Never mutate state directly.
+10. All form submissions use React Hook Form + Zod schema validation. Never use uncontrolled raw HTML forms.
+11. Framer Motion `useScroll` and `useTransform` only work in Client Components. Keep layout.tsx as a Server Component and wrap animated sections in separate `'use client'` components.
+12. For Lenis smooth scroll: initialize in a `<LenisProvider>` client component that wraps children in layout.tsx.
+13. `searchParams` in page.tsx are also typed as a Promise in Next.js 14+:
+    ```typescript
+    type tSearchParams = Promise<{ [key: string]: string | string[] | undefined }>
+    ```
+14. Never import a Client Component into a Server Component that fetches data — always pass data down as props from Server to Client.
+15. Use `@/` path alias for all imports. Never use relative `../../` paths.
+
+---
+
+## Scratchpad
+
+### 1. Project Setup and Configuration [X]
+
+- [x] Initialize Next.js 14 project with TypeScript (strict mode)
+- [x] Set up project folder structure (src/, app/, components/, lib/, hooks/, store/, actions/, types/, constants/)
+- [x] Configure ESLint + Prettier (single quotes, 2-space indent, trailing commas, no semicolons, 100 char width)
+- [x] Install and configure dependencies:
+  - Shadcn UI components
+  - Lucide icons
+  - Zod for validation
+  - Zustand + immer for state management
+  - Recharts for analytics
+  - Resend for emails
+  - Uploadthing for file uploads
+  - Prisma ORM
+  - PostgreSQL database
+  - NextAuth.js v5 (Auth.js beta)
+  - Stripe for payments
+  - Framer Motion
+  - Lenis smooth scroll
+  - @tanstack/react-table
+  - React Hook Form + @hookform/resolvers
+- [x] Create next.config.js with remotePatterns for unsplash.com and uploadthing.com
+- [x] Create .env.example with all required keys
+- [x] Create lib/utils.ts with cn() helper (clsx + tailwind-merge)
+- [x] Create lib/env.ts with Zod environment variable validation
+- [x] Create constants/animations.ts with fadeUp, staggerContainer, fadeIn variants
+- [x] Create types/index.ts with all shared TypeScript types
+
+### 2. Database and Authentication [X]
+
+- [x] Set up PostgreSQL database
+- [x] Configure Prisma schema with all models:
+  - User (id, name, email, password, role, createdAt, updatedAt)
+  - Account, Session, VerificationToken (NextAuth adapter models)
+  - Product (id, name, slug, description, price, comparePrice, images, stock, sku, categoryId)
+  - Category (id, name, slug, description, image)
+  - Order (id, orderNumber, userId, total, status, stripePaymentId, shippingAddress)
+  - OrderItem (id, orderId, productId, quantity, size, price)
+  - Review (id, userId, productId, rating, comment, createdAt)
+  - Cart (id, userId unique) + CartItem (id, cartId, productId, quantity, size)
+  - Address (id, userId, name, street, city, state, zip, country, isDefault)
+  - Wishlist (id, userId, productId, createdAt)
+- [x] Implement NextAuth.js v5 authentication:
+  - lib/auth.ts — main config with Prisma adapter
+  - lib/auth.config.ts — edge-compatible config
+  - middleware.ts — protect /account/* and /admin/* routes
+  - Credentials provider with bcrypt password validation
+  - Google + GitHub OAuth providers
+  - Session callback adds user.id and user.role to token
+  - Pages: signIn: '/login', error: '/login'
+
+### 3. Core Features — Customer Side [ ]
+
+- [x] Home Layout:
+  - Create `(home)` route group in `app/` directory
+  - app/(home)/layout.tsx — Header + Footer + CartDrawer + LenisProvider
+  - components/home/Header.tsx — fixed nav, backdrop-blur on scroll, cart badge, auth state
+  - components/home/Footer.tsx — 4-column grid, social icons, nav links
+- [x] Homepage (app/(home)/page.tsx):
+  - Fetches getFeaturedProducts() + getCategories() via Server Actions
+  - React Suspense boundaries with skeleton fallbacks
+  - Wires HeroSection cart badge to useCartCount()
+  - components/home/FeaturedProducts.tsx — 3-column grid, Quick Add hover bar
+  - components/home/CategoryGrid.tsx — 4-column masonry, Framer Motion stagger reveal
+- [x] Products Catalog (app/(home)/products/page.tsx):
+  - Server Component reads searchParams (category, search, sort, page)
+  - components/home/ProductFilters.tsx — category checkboxes, price range slider, sort
+  - components/home/ProductGrid.tsx — 3-column grid, empty state
+  - components/home/Pagination.tsx — URL-based page navigation
+  - app/(home)/products/loading.tsx — skeleton grid
+- [x] Product Detail (app/(home)/products/[slug]/page.tsx):
+  - getProductBySlug(slug), notFound() if null
+  - generateMetadata export for SEO
+  - components/home/ProductDetail.tsx — image gallery, size selector, qty, Add to Cart
+  - components/home/ProductReviews.tsx — rating summary, review cards, pagination
+  - components/home/ReviewForm.tsx — star rating selector, comment, submit
+  - Related products section (same category, max 4)
+- [x] Shopping Cart:
+  - store/cart.store.ts — Zustand + immer + localStorage persistence
+  - addItem / removeItem / updateQuantity / clearCart / toggleCart
+  - useCartTotal() + useCartCount() derived selectors
+  - components/home/CartDrawer.tsx — slides from right, item list, subtotal, Checkout CTA
+- [x] Checkout Process:
+  - app/(home)/checkout/page.tsx — auth-required, renders CheckoutForm
+  - components/home/CheckoutForm.tsx — shipping info (RHF + Zod), order summary, Pay button
+  - actions/checkout.actions.ts — createCheckoutSession, server-side price validation
+  - app/api/webhooks/stripe/route.ts — handles checkout.session.completed
+  - app/(home)/checkout/success/page.tsx — order confirmation, clearCart
+  - lib/stripe.ts — Stripe singleton
+- [x] User Dashboard:
+  - app/(home)/account/layout.tsx — auth guard, sidebar nav
+  - app/(home)/account/orders/page.tsx — order history table
+  - app/(home)/account/orders/[id]/page.tsx — full order detail
+  - app/(home)/account/profile/page.tsx — name, email, avatar (UploadThing), password change
+  - app/(home)/account/addresses/page.tsx — list, add, edit, delete, set default
+  - app/(home)/account/wishlist/page.tsx — grid, Move to Cart button
+  - actions/account.actions.ts — updateProfile, changePassword, address CRUD, toggleWishlist
+
+### 4. Admin Dashboard [ ]
+
+- [x] Admin auth guard in app/(admin)/layout.tsx — role === 'ADMIN' check
+- [x] Layout and Structure:
+  - [x] app/(admin)/layout.tsx — AdminSidebar + main content area
+  - [x] components/admin/AdminSidebar.tsx — fixed sidebar, nav links with Lucide icons, collapse on mobile
+  - [x] Responsive grid for dashboard widgets
+  - [x] Loading states and error boundaries
+- [x] Key Metrics Cards (components/admin/MetricCard.tsx):
+  - [x] Total revenue with % change vs last period
+  - [x] Total orders with % change
+  - [x] Total customers with % change
+  - [x] Average order value with % change
+- [x] Sales Analytics:
+  - [x] Revenue Chart (components/admin/RevenueChart.tsx):
+    - [x] Recharts LineChart, daily revenue last 30 days
+    - [x] Period filter: 7D / 30D / 90D / 1Y
+    - [x] Dark theme, electric accent line stroke
+    - [x] Dynamic import (ssr: false)
+  - [x] Order Statistics (components/admin/OrdersChart.tsx):
+    - [x] Recharts BarChart, order volume by day
+    - [x] Status breakdown as stacked bars
+    - [x] Same period filter controls
+- [x] Recent Orders Table (components/admin/RecentOrdersTable.tsx):
+  - [x] Columns: Order #, Customer, Items, Total, Status badge, Date, Actions
+  - [x] Status colors: PENDING=amber, PROCESSING=blue, SHIPPED=purple, DELIVERED=green, CANCELLED=red
+  - [x] Actions dropdown: View / Update Status / Refund
+  - [x] Sorting and filtering
+- [ ] Low Stock Alerts (components/admin/LowStockAlerts.tsx):
+  - [ ] Products with stock < 10
+  - [ ] Quick restock action (update stock inline)
+  - [ ] Color-coded stock level indicators (red=0, amber<10, green>=10)
+- [ ] Top Products (components/admin/TopProducts.tsx):
+  - [ ] Best-selling products by quantity sold (last 30 days)
+  - [ ] Revenue per product
+  - [ ] Current stock status badge
+- [ ] Customer Insights (components/admin/CustomerInsights.tsx):
+  - [ ] New vs returning customers chart (Recharts)
+  - [ ] Customer acquisition over time
+  - [ ] Top 5 customers by total spend
+- [ ] Product Management:
+  - [ ] app/(admin)/admin/products/page.tsx — data table with @tanstack/react-table
+  - [ ] components/admin/ProductsTable.tsx — bulk select, search, Add Product button
+  - [ ] components/admin/ProductFormModal.tsx — shadcn Dialog, RHF + Zod, UploadThing images
+  - [ ] app/(admin)/admin/products/[id]/page.tsx — edit mode
+  - [ ] lib/uploadthing.ts + app/api/uploadthing/route.ts
+  - [ ] actions/product.actions.ts — getProducts, getProductBySlug, createProduct, updateProduct, deleteProduct, updateStock
+- [ ] Order Management:
+  - [ ] app/(admin)/admin/orders/page.tsx — full orders table, filter by status + date range
+  - [ ] components/admin/OrdersTable.tsx — @tanstack/react-table
+  - [ ] app/(admin)/admin/orders/[id]/page.tsx — full order detail, status update, refund
+  - [ ] actions/admin.actions.ts — getAllOrders, getOrderById, updateOrderStatus, issueRefund
+- [ ] User Management:
+  - [ ] app/(admin)/admin/customers/page.tsx — customers table with order count + total spent
+  - [ ] components/admin/CustomersTable.tsx — search, actions
+  - [ ] app/(admin)/admin/customers/[id]/page.tsx — profile, stats, order history
+  - [ ] components/admin/EmailComposeModal.tsx — send email via Resend
+  - [ ] actions/admin.actions.ts — getAllCustomers, getCustomerById, sendCustomerEmail, suspendCustomer
+
+### 5. Advanced Features [ ]
+
+- [ ] Search Modal (components/home/SearchModal.tsx):
+  - [ ] Full-screen overlay, Framer Motion fade+scale
+  - [ ] Debounced search (300ms), calls searchProducts server action
+  - [ ] Keyboard navigation (arrows, Enter, Esc)
+  - [ ] Recent searches in localStorage
+  - [ ] Cmd+K shortcut wired in Header.tsx
+- [ ] Email System (Resend + React Email):
+  - [ ] emails/OrderConfirmation.tsx — items table, shipping address, order total, CTA
+  - [ ] emails/ShippingUpdate.tsx — tracking number, estimated delivery
+  - [ ] emails/WelcomeEmail.tsx — brand intro, Shop CTA
+  - [ ] emails/PasswordReset.tsx — reset link
+  - [ ] lib/email.ts — sendOrderConfirmation, sendShippingUpdate, sendWelcomeEmail, sendPasswordReset
+  - [ ] lib/resend.ts — Resend singleton
+- [ ] Performance Optimization:
+  - [ ] unstable_cache on getProducts, getFeaturedProducts, getCategories
+  - [ ] Tag-based revalidation: 'products' tag, 'orders' tag
+  - [ ] loading.tsx skeletons for all major segments
+  - [ ] Dynamic imports for Recharts (ssr: false)
+  - [ ] React Suspense boundaries around all data-fetching sections
+- [ ] SEO:
+  - [ ] generateMetadata in all product + category pages
+  - [ ] JSON-LD review schema on product pages
+  - [ ] app/robots.ts — block /admin, /account, /api
+  - [ ] app/sitemap.ts — all products + categories
+  - [ ] Default og:image and site metadata in root layout
+
+### 6. Testing and Deployment [ ]
+
+- [ ] Seed data (prisma/seed.ts):
+  - [ ] 1 admin + 5 customer users (bcrypt hashed passwords)
+  - [ ] 6 categories (Outerwear, Tops, Bottoms, Footwear, Accessories, Essentials)
+  - [ ] 24 products with realistic names, prices $80–$850, 6 on sale
+  - [ ] 10 orders in various statuses
+  - [ ] 15 reviews across products
+- [ ] Integration check:
+  - [ ] All imports use @/ alias
+  - [ ] All pages that need auth have auth check at top
+  - [ ] app/global-error.tsx global error boundary
+  - [ ] app/api/health/route.ts — { status, db, timestamp }
+- [ ] Unit testing (Jest + React Testing Library)
+- [ ] E2E testing (Playwright)
+- [ ] Security audit (dependency scan, OWASP checklist)
+- [ ] Production deployment (Vercel):
+  - [ ] Environment variables configured
+  - [ ] PostgreSQL on Neon or Supabase
+  - [ ] Stripe webhook endpoint registered
+  - [ ] UploadThing production app configured
+  - [ ] Custom domain + SSL
+
+### 7. Documentation [ ]
+
+- [ ] README.md — setup, env vars, DB commands, deployment guide
+- [ ] API documentation (all route handlers)
+- [ ] Admin user guide
+- [ ] Deployment checklist
+
+---
+
+## Role
+
+You are a senior full-stack engineer specializing in Next.js 14 App Router, TypeScript, Prisma, PostgreSQL, Stripe, and modern UI libraries. You write clean, production-ready code. You never leave TODOs. You never use placeholder comments. Every file you produce is complete and functional.
+
+---
+
+## Code Style & Conventions
+
+### TypeScript
+- Strict mode always (`"strict": true` in tsconfig.json).
+- No `any` — use `unknown` and narrow with type guards.
+- All API route handlers typed with `NextRequest` and `NextResponse`.
+- Zod schemas in `lib/validations/` reused across server actions, API routes, and forms.
+- Export all shared types from `types/index.ts`.
+- Server Actions return typed results:
+  ```typescript
+  type ActionResult<T> =
+    | { success: true; data: T }
+    | { success: false; error: string }
+  ```
+
+### File & Folder Naming
+- Components: PascalCase (`ProductCard.tsx`)
+- Hooks: camelCase with `use` prefix (`useCart.ts`)
+- Utilities: camelCase (`formatPrice.ts`)
+- Route groups: lowercase in parentheses (`(home)`, `(admin)`)
+- Server actions: `actions/[entity].actions.ts`
+
+### Server vs Client Components
+- DEFAULT: Server Component. Add `'use client'` only when needed.
+- Server Components: data fetching, DB queries, auth checks, metadata.
+- Client Components: event handlers, hooks, Framer Motion, Zustand.
+- Always pass data as props from Server → Client. Never fetch in Client.
+
+### Database (Prisma)
+- All DB queries in Server Components or Server Actions only.
+- Use `select` on every query — never `findMany()` without select.
+- Wrap multi-step mutations in `prisma.$transaction()`.
+- Add `@@index` on all foreign keys and searchable fields.
+
+### Forms
+- React Hook Form + Zod resolver on every form.
+- Submit via Server Action using `useTransition` + isPending loading state.
+- Show field-level Zod errors inline below each input.
+
+### Styling
+- Tailwind CSS only. No inline `style={{}}` except for Framer Motion dynamic values.
+- Dark theme primary — CSS variables in globals.css.
+- Framer Motion for all animations.
+- shadcn/ui for all form elements, dialogs, dropdowns, tables.
+- Glassmorphism pattern: `backdrop-blur-xl bg-white/5 border border-white/10`
+
+---
+
+## Task Workflow
+
+Before writing ANY code for a new task:
+1. Read the Scratchpad. Find the current phase and the next `[ ]` task.
+2. List the files you will create or modify.
+3. Confirm any dependencies that must exist first.
+4. Write all files completely. No TODOs. No placeholders.
+5. Mark completed steps `[X]` in the Scratchpad.
+6. Add any new lessons to the Lessons section.
+
+---
+
+## What Never To Do
+
+- Never use `<form action="">` — use Server Action or React Hook Form.
+- Never call `prisma` in a Client Component.
+- Never expose environment variable values in client-side code.
+- Never use `JSON.parse` without try/catch.
+- Never use `as any`.
+- Never skip Zod validation on user input.
+- Never create a Prisma Client outside `lib/prisma.ts`.
+- Never use `fetch` in a Client Component for mutations — use Server Actions.
+- Never leave `console.log` in committed code.
+- Never use relative `../../` imports — always `@/`.
+
+---
+
+## Environment Variables
+
+All keys in `.env.local`. Never hardcode. Validate at startup via `lib/env.ts`.
+
+```
+DATABASE_URL=
+NEXTAUTH_SECRET=
+NEXTAUTH_URL=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
+STRIPE_SECRET_KEY=
+STRIPE_PUBLISHABLE_KEY=
+STRIPE_WEBHOOK_SECRET=
+UPLOADTHING_SECRET=
+UPLOADTHING_APP_ID=
+RESEND_API_KEY=
+```
+
+---
+
+## Prisma Schema Reference
+
+```prisma
+model User {
+  id            String     @id @default(cuid())
+  name          String?
+  email         String     @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          Role       @default(CUSTOMER)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  orders        Order[]
+  reviews       Review[]
+  addresses     Address[]
+  wishlist      Wishlist[]
+  cart          Cart?
+  accounts      Account[]
+  sessions      Session[]
+}
+
+enum Role { CUSTOMER ADMIN }
+
+model Product {
+  id           String      @id @default(cuid())
+  name         String
+  slug         String      @unique
+  description  String
+  price        Float
+  comparePrice Float?
+  images       String[]
+  stock        Int         @default(0)
+  sku          String?     @unique
+  categoryId   String
+  category     Category    @relation(fields: [categoryId], references: [id])
+  reviews      Review[]
+  orderItems   OrderItem[]
+  cartItems    CartItem[]
+  wishlist     Wishlist[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  @@index([categoryId])
+  @@index([slug])
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  orderNumber     String      @unique @default(cuid())
+  userId          String
+  user            User        @relation(fields: [userId], references: [id])
+  items           OrderItem[]
+  total           Float
+  status          OrderStatus @default(PENDING)
+  stripePaymentId String?
+  shippingAddress Json
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  @@index([userId])
+}
+
+enum OrderStatus {
+  PENDING PROCESSING SHIPPED DELIVERED CANCELLED REFUNDED
+}
+```
+
+---
+
+## Stripe Integration
+
+- Use `stripe.checkout.sessions.create()` — do not build custom payment UI.
+- Webhook at `/api/webhooks/stripe`:
+  - `checkout.session.completed` → create Order, decrement stock, clear cart, send email
+  - `payment_intent.payment_failed` → update order status
+- Always verify signature: `stripe.webhooks.constructEvent()`
+- Store `stripePaymentId` on Order.
+- lib/stripe.ts — singleton, same pattern as lib/prisma.ts.
+
+---
+
+## Animation Standards (Framer Motion)
+
+```typescript
+// constants/animations.ts
+export const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+}
+export const staggerContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08 } }
+}
+export const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.5 } }
+}
+```
+
+Use `whileInView` with `viewport={{ once: true, margin: '-100px' }}` for scroll reveals. Never use `useEffect` + IntersectionObserver for this purpose.
+
+---
+
+## Shadcn Components to Install
+
+```bash
+npx shadcn@latest add button input label card badge
+npx shadcn@latest add dialog sheet drawer
+npx shadcn@latest add form select textarea checkbox radio-group
+npx shadcn@latest add table pagination
+npx shadcn@latest add dropdown-menu navigation-menu
+npx shadcn@latest add toast toaster sonner
+npx shadcn@latest add avatar skeleton
+npx shadcn@latest add separator tabs
+npx shadcn@latest add command popover
+npx shadcn@latest add alert alert-dialog
+npx shadcn@latest add progress slider
+npx shadcn@latest add chart
+```
