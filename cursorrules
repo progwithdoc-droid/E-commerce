@@ -60,36 +60,38 @@
 
 ### 1. Project Setup and Configuration [X]
 
-- [x] Initialize Next.js 14 project with TypeScript (strict mode)
-- [x] Set up project folder structure (src/, app/, components/, lib/, hooks/, store/, actions/, types/, constants/)
-- [x] Configure ESLint + Prettier (single quotes, 2-space indent, trailing commas, no semicolons, 100 char width)
-- [x] Install and configure dependencies:
-  - Shadcn UI components
-  - Lucide icons
-  - Zod for validation
-  - Zustand + immer for state management
-  - Recharts for analytics
-  - Resend for emails
-  - Uploadthing for file uploads
-  - Prisma ORM
-  - PostgreSQL database
-  - NextAuth.js v5 (Auth.js beta)
-  - Stripe for payments
-  - Framer Motion
-  - Lenis smooth scroll
-  - @tanstack/react-table
-  - React Hook Form + @hookform/resolvers
-- [x] Create next.config.js with remotePatterns for unsplash.com and uploadthing.com
-- [x] Create .env.example with all required keys
-- [x] Create lib/utils.ts with cn() helper (clsx + tailwind-merge)
-- [x] Create lib/env.ts with Zod environment variable validation
-- [x] Create constants/animations.ts with fadeUp, staggerContainer, fadeIn variants
-- [x] Create types/index.ts with all shared TypeScript types
+- [X] Initialize Next.js 14 project with TypeScript (strict mode)
+- [X] Set up project folder structure (app/, components/, lib/, store/ — hooks/, actions/, types/, constants/ pending)
+- [ ] Configure ESLint + Prettier (single quotes, 2-space indent, trailing commas, no semicolons, 100 char width)
+- [ ] Install and configure dependencies:
+  - [ ] Shadcn UI components
+  - [X] Lucide icons
+  - [X] Zod for validation
+  - [X] Zustand for state management (immer pending)
+  - [ ] Recharts for analytics
+  - [ ] Resend for emails
+  - [ ] Uploadthing for file uploads
+  - [ ] Prisma ORM
+  - [X] PostgreSQL database (Neon project created; paste DATABASE_URL in .env)
+  - [ ] NextAuth.js v5 (Auth.js beta)
+  - [ ] Stripe for payments
+  - [X] Framer Motion
+  - [X] Lenis smooth scroll
+  - [ ] @tanstack/react-table
+  - [ ] React Hook Form + @hookform/resolvers
+- [X] Create next.config.js with remotePatterns for unsplash.com and uploadthing.com
+- [X] Create .env.example with all required keys
+- [ ] Create lib/utils.ts with cn() helper (clsx + tailwind-merge)
+- [X] Create lib/env.ts with Zod environment variable validation
+- [ ] Create constants/animations.ts with fadeUp, staggerContainer, fadeIn variants
+- [ ] Create types/index.ts with all shared TypeScript types
 
 ### 2. Database and Authentication [X]
 
-- [x] Set up PostgreSQL database
-- [x] Configure Prisma schema with all models:
+- [X] Set up PostgreSQL database (Neon)
+- [X] Wire Neon driver (@neondatabase/serverless — lib/db.ts, GET /api/db; verify after DATABASE_URL is in .env)
+- [X] Database schema created (db/schema.sql — users, auth, catalog, orders, cart, wishlist)
+- [ ] Configure Prisma schema with all models (optional; raw SQL migration in place):
   - User (id, name, email, password, role, createdAt, updatedAt)
   - Account, Session, VerificationToken (NextAuth adapter models)
   - Product (id, name, slug, description, price, comparePrice, images, stock, sku, categoryId)
@@ -100,7 +102,7 @@
   - Cart (id, userId unique) + CartItem (id, cartId, productId, quantity, size)
   - Address (id, userId, name, street, city, state, zip, country, isDefault)
   - Wishlist (id, userId, productId, createdAt)
-- [x] Implement NextAuth.js v5 authentication:
+- [] Implement NextAuth.js v5 authentication:
   - lib/auth.ts — main config with Prisma adapter
   - lib/auth.config.ts — edge-compatible config
   - middleware.ts — protect /account/* and /admin/* routes
@@ -111,43 +113,43 @@
 
 ### 3. Core Features — Customer Side [ ]
 
-- [x] Home Layout:
+- [] Home Layout:
   - Create `(home)` route group in `app/` directory
   - app/(home)/layout.tsx — Header + Footer + CartDrawer + LenisProvider
   - components/home/Header.tsx — fixed nav, backdrop-blur on scroll, cart badge, auth state
   - components/home/Footer.tsx — 4-column grid, social icons, nav links
-- [x] Homepage (app/(home)/page.tsx):
+- [] Homepage (app/(home)/page.tsx):
   - Fetches getFeaturedProducts() + getCategories() via Server Actions
   - React Suspense boundaries with skeleton fallbacks
   - Wires HeroSection cart badge to useCartCount()
   - components/home/FeaturedProducts.tsx — 3-column grid, Quick Add hover bar
   - components/home/CategoryGrid.tsx — 4-column masonry, Framer Motion stagger reveal
-- [x] Products Catalog (app/(home)/products/page.tsx):
+- [] Products Catalog (app/(home)/products/page.tsx):
   - Server Component reads searchParams (category, search, sort, page)
   - components/home/ProductFilters.tsx — category checkboxes, price range slider, sort
   - components/home/ProductGrid.tsx — 3-column grid, empty state
   - components/home/Pagination.tsx — URL-based page navigation
   - app/(home)/products/loading.tsx — skeleton grid
-- [x] Product Detail (app/(home)/products/[slug]/page.tsx):
+- [] Product Detail (app/(home)/products/[slug]/page.tsx):
   - getProductBySlug(slug), notFound() if null
   - generateMetadata export for SEO
   - components/home/ProductDetail.tsx — image gallery, size selector, qty, Add to Cart
   - components/home/ProductReviews.tsx — rating summary, review cards, pagination
   - components/home/ReviewForm.tsx — star rating selector, comment, submit
   - Related products section (same category, max 4)
-- [x] Shopping Cart:
+- [] Shopping Cart:
   - store/cart.store.ts — Zustand + immer + localStorage persistence
   - addItem / removeItem / updateQuantity / clearCart / toggleCart
   - useCartTotal() + useCartCount() derived selectors
   - components/home/CartDrawer.tsx — slides from right, item list, subtotal, Checkout CTA
-- [x] Checkout Process:
+- [] Checkout Process:
   - app/(home)/checkout/page.tsx — auth-required, renders CheckoutForm
   - components/home/CheckoutForm.tsx — shipping info (RHF + Zod), order summary, Pay button
   - actions/checkout.actions.ts — createCheckoutSession, server-side price validation
   - app/api/webhooks/stripe/route.ts — handles checkout.session.completed
   - app/(home)/checkout/success/page.tsx — order confirmation, clearCart
   - lib/stripe.ts — Stripe singleton
-- [x] User Dashboard:
+- [] User Dashboard:
   - app/(home)/account/layout.tsx — auth guard, sidebar nav
   - app/(home)/account/orders/page.tsx — order history table
   - app/(home)/account/orders/[id]/page.tsx — full order detail
@@ -158,32 +160,32 @@
 
 ### 4. Admin Dashboard [ ]
 
-- [x] Admin auth guard in app/(admin)/layout.tsx — role === 'ADMIN' check
-- [x] Layout and Structure:
-  - [x] app/(admin)/layout.tsx — AdminSidebar + main content area
-  - [x] components/admin/AdminSidebar.tsx — fixed sidebar, nav links with Lucide icons, collapse on mobile
-  - [x] Responsive grid for dashboard widgets
-  - [x] Loading states and error boundaries
-- [x] Key Metrics Cards (components/admin/MetricCard.tsx):
-  - [x] Total revenue with % change vs last period
-  - [x] Total orders with % change
-  - [x] Total customers with % change
-  - [x] Average order value with % change
-- [x] Sales Analytics:
-  - [x] Revenue Chart (components/admin/RevenueChart.tsx):
-    - [x] Recharts LineChart, daily revenue last 30 days
-    - [x] Period filter: 7D / 30D / 90D / 1Y
-    - [x] Dark theme, electric accent line stroke
-    - [x] Dynamic import (ssr: false)
-  - [x] Order Statistics (components/admin/OrdersChart.tsx):
-    - [x] Recharts BarChart, order volume by day
-    - [x] Status breakdown as stacked bars
-    - [x] Same period filter controls
-- [x] Recent Orders Table (components/admin/RecentOrdersTable.tsx):
-  - [x] Columns: Order #, Customer, Items, Total, Status badge, Date, Actions
-  - [x] Status colors: PENDING=amber, PROCESSING=blue, SHIPPED=purple, DELIVERED=green, CANCELLED=red
-  - [x] Actions dropdown: View / Update Status / Refund
-  - [x] Sorting and filtering
+- [] Admin auth guard in app/(admin)/layout.tsx — role === 'ADMIN' check
+- [] Layout and Structure:
+  - [] app/(admin)/layout.tsx — AdminSidebar + main content area
+  - [] components/admin/AdminSidebar.tsx — fixed sidebar, nav links with Lucide icons, collapse on mobile
+  - [] Responsive grid for dashboard widgets
+  - [] Loading states and error boundaries
+- [] Key Metrics Cards (components/admin/MetricCard.tsx):
+  - [] Total revenue with % change vs last period
+  - [] Total orders with % change
+  - [] Total customers with % change
+  - [] Average order value with % change
+- [] Sales Analytics:
+  - [] Revenue Chart (components/admin/RevenueChart.tsx):
+    - [] Recharts LineChart, daily revenue last 30 days
+    - [] Period filter: 7D / 30D / 90D / 1Y
+    - [] Dark theme, electric accent line stroke
+    - [] Dynamic import (ssr: false)
+  - [] Order Statistics (components/admin/OrdersChart.tsx):
+    - [] Recharts BarChart, order volume by day
+    - [] Status breakdown as stacked bars
+    - [] Same period filter controls
+- [] Recent Orders Table (components/admin/RecentOrdersTable.tsx):
+  - [] Columns: Order #, Customer, Items, Total, Status badge, Date, Actions
+  - [] Status colors: PENDING=amber, PROCESSING=blue, SHIPPED=purple, DELIVERED=green, CANCELLED=red
+  - [] Actions dropdown: View / Update Status / Refund
+  - [] Sorting and filtering
 - [ ] Low Stock Alerts (components/admin/LowStockAlerts.tsx):
   - [ ] Products with stock < 10
   - [ ] Quick restock action (update stock inline)
