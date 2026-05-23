@@ -1,4 +1,7 @@
 import { Suspense } from 'react'
+
+// Fetch from Neon at request time — avoids build failing when DATABASE_URL is missing on Vercel
+export const dynamic = 'force-dynamic'
 import { Hero } from '@/app/sections/Hero'
 import { FeaturedCategories } from '@/app/sections/FeaturedCategories'
 import { HeroProductDrop } from '@/app/sections/HeroProductDrop'

@@ -1,4 +1,6 @@
 import { Suspense } from 'react'
+
+export const dynamic = 'force-dynamic'
 import { getCategories, getProducts } from '@/app/actions/products'
 import { CatalogProductGrid } from '@/components/home/CatalogProductGrid'
 import { ProductFilters } from '@/components/home/ProductFilters'
