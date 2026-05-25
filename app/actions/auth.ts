@@ -1,6 +1,6 @@
 'use server'
 
-import { hash } from 'bcryptjs'
+import { hash, compare } from 'bcryptjs'
 import { AuthError } from 'next-auth'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
@@ -16,6 +16,10 @@ const registerSchema = z.object({
 const loginSchema = z.object({
   email: z.string().trim().toLowerCase().email(),
   password: z.string().trim().min(6),
+})
+
+const adminRegisterSchema = registerSchema.extend({
+  adminSecret: z.string().trim().min(1),
 })
 
 export type RegisterState = {
@@ -72,6 +76,63 @@ export async function registerUser(
   redirect('/account')
 }
 
+export async function registerAdminUser(
+  _prev: RegisterState,
+  formData: FormData
+): Promise<RegisterState> {
+  const setupSecret = process.env.ADMIN_SETUP_SECRET
+  if (!setupSecret) {
+    return {
+      error: 'Admin sign-up is disabled. Add ADMIN_SETUP_SECRET to your .env file.',
+    }
+  }
+
+  const parsed = adminRegisterSchema.safeParse({
+    name: formData.get('name'),
+    email: formData.get('email'),
+    password: formData.get('password'),
+    adminSecret: formData.get('adminSecret'),
+  })
+
+  if (!parsed.success) {
+    return { error: 'Invalid form data. Check your inputs.' }
+  }
+
+  if (parsed.data.adminSecret !== setupSecret) {
+    return { error: 'Invalid admin access code.' }
+  }
+
+  const { name, email, password } = parsed.data
+  const existing = await prisma.user.findUnique({ where: { email } })
+
+  if (existing) {
+    return { error: 'An account with this email already exists.' }
+  }
+
+  const passwordHash = await hash(password, 12)
+
+  await prisma.user.create({
+    data: { name, email, password: passwordHash, role: 'ADMIN' },
+  })
+
+  try {
+    await signIn('credentials', {
+      email,
+      password,
+      redirect: false,
+    })
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return {
+        error: 'Admin account created but sign-in failed. Please sign in manually.',
+      }
+    }
+    throw error
+  }
+
+  redirect('/admin')
+}
+
 export async function loginUser(
   _prev: LoginState,
   formData: FormData
@@ -87,6 +148,23 @@ export async function loginUser(
 
   const callbackUrl =
     String(formData.get('callbackUrl') ?? '/account') || '/account'
+
+  if (callbackUrl.startsWith('/admin')) {
+    const user = await prisma.user.findUnique({
+      where: { email: parsed.data.email },
+      select: { password: true, role: true },
+    })
+    if (!user?.password) {
+      return { error: 'Invalid email or password.' }
+    }
+    const passwordMatch = await compare(parsed.data.password, user.password)
+    if (!passwordMatch) {
+      return { error: 'Invalid email or password.' }
+    }
+    if (user.role !== 'ADMIN') {
+      return { error: 'This account does not have admin access.' }
+    }
+  }
 
   try {
     await signIn('credentials', {

@@ -1,12 +1,14 @@
 "use client"
 
+import Link from "next/link"
+import { useSession } from "next-auth/react"
 import { motion, AnimatePresence } from "framer-motion"
 import { X, Plus, Minus, Trash2 } from "lucide-react"
 import Image from "next/image"
-import Link from "next/link"
 import { useCart } from "../store/cart"
 
 export function CartDrawer() {
+  const { data: session } = useSession()
   const isOpen = useCart((s) => s.isOpen)
   const setCartOpen = useCart((s) => s.setCartOpen)
   const items = useCart((s) => s.items)
@@ -131,13 +133,23 @@ export function CartDrawer() {
                   <span className="font-body text-sm text-muted">Subtotal</span>
                   <span className="font-body text-lg text-cream">${subtotal}</span>
                 </div>
-                <Link
-                  href="/checkout"
-                  onClick={() => setCartOpen(false)}
-                  className="block w-full py-3 text-center bg-electric text-void font-body text-sm tracking-[0.18em] uppercase hover:bg-cream transition-colors duration-300"
-                >
-                  Checkout
-                </Link>
+                {session?.user ? (
+                  <Link
+                    href="/checkout"
+                    onClick={() => setCartOpen(false)}
+                    className="block w-full py-3 text-center bg-electric text-void font-body text-sm tracking-[0.18em] uppercase hover:bg-cream transition-colors duration-300"
+                  >
+                    Checkout
+                  </Link>
+                ) : (
+                  <Link
+                    href="/login?callbackUrl=/checkout"
+                    onClick={() => setCartOpen(false)}
+                    className="block w-full py-3 text-center bg-electric text-void font-body text-sm tracking-[0.18em] uppercase hover:bg-cream transition-colors duration-300"
+                  >
+                    Sign in to checkout
+                  </Link>
+                )}
                 <p className="font-body text-xs text-caption text-center">
                   Shipping & taxes calculated at checkout
                 </p>

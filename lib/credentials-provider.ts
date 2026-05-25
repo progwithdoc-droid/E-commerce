@@ -30,6 +30,7 @@ export const credentialsProvider = Credentials({
     })
 
     if (!user?.password) return null
+    if (user.role === 'SUSPENDED') return null
 
     const passwordMatch = await compare(password, user.password)
     if (!passwordMatch) return null

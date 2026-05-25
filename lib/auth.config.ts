@@ -30,15 +30,8 @@ export const authConfig = {
     error: '/login',
   },
   callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user
-      const path = nextUrl.pathname
-      const isProtected =
-        path.startsWith('/account') ||
-        path.startsWith('/admin') ||
-        path.startsWith('/checkout')
-
-      if (isProtected) return isLoggedIn
+    authorized() {
+      // Route protection handled entirely in middleware.ts with correct redirects
       return true
     },
     jwt({ token, user }) {

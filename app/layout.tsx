@@ -5,6 +5,8 @@ import { SmoothScroll } from "./components/SmoothScroll"
 import { CustomCursor } from "./components/CustomCursor"
 import { CartDrawer } from "./components/CartDrawer"
 import { SessionProvider } from "./components/providers/SessionProvider"
+import { Preloader } from "./components/Preloader"
+import { SuppressWalletExtensionErrors } from "./components/SuppressWalletExtensionErrors"
 import { Toaster } from "sonner"
 
 const cormorant = Cormorant_Garamond({
@@ -31,6 +33,13 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "AURUM STORE — Luxury Fashion & Lifestyle",
   description: "Designed for those who know. Premium apparel and accessories.",
+  metadataBase: new URL(process.env.AUTH_URL ?? "http://localhost:3000"),
+  openGraph: {
+    title: "AURUM STORE — Luxury Fashion & Lifestyle",
+    description: "Designed for those who know. Premium apparel and accessories.",
+    type: "website",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
+  },
 }
 
 export default function RootLayout({
@@ -41,8 +50,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${cormorant.variable} ${bebas.variable} ${inter.variable}`}>
       <body className="bg-void text-cream overflow-x-hidden">
+        <SuppressWalletExtensionErrors />
         <SessionProvider>
           <SmoothScroll>
+            <Preloader />
             <CustomCursor />
             <CartDrawer />
             {children}

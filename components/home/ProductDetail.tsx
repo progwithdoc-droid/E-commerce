@@ -12,6 +12,7 @@ type ProductDetailProps = {
     images: string[]
     stock: number
     sku: string | null
+    reviews?: Array<{ rating: number; comment: string | null; createdAt: string }>
     related: ProductCard[]
   }
 }

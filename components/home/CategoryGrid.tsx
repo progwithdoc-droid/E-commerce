@@ -13,7 +13,7 @@ type Category = {
 
 export function CategoryGrid({ categories }: { categories: Category[] }) {
   return (
-    <section className="py-16 px-6 lg:px-12 border-b border-white/5">
+    <section id="collections" className="py-16 px-6 lg:px-12 border-b border-white/5">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {categories.map((cat, i) => (
           <motion.div

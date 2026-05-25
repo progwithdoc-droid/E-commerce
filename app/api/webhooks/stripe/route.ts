@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import Stripe from 'stripe'
+import { revalidateTag } from 'next/cache'
 import { getStripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
 
@@ -37,6 +38,7 @@ export async function POST(req: Request) {
           stripePaymentId: session.payment_intent as string,
         },
       })
+      revalidateTag('orders')
     }
   }
 

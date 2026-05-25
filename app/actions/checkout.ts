@@ -1,6 +1,7 @@
 'use server'
 
 import { z } from 'zod'
+import { revalidateTag } from 'next/cache'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { getStripe } from '@/lib/stripe'
@@ -107,6 +108,7 @@ export async function createCheckoutSession(input: z.infer<typeof checkoutSchema
     where: { id: order.id },
     data: { stripePaymentId: checkoutSession.id },
   })
+  revalidateTag('orders')
 
   if (!checkoutSession.url) return { error: 'Could not create payment session' }
   return { url: checkoutSession.url }

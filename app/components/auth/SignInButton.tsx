@@ -2,15 +2,24 @@
 
 import Link from 'next/link'
 import { useSession, signOut } from 'next-auth/react'
+import { useMounted } from '@/app/hooks/useMounted'
 
 export function SignInButton() {
+  const mounted = useMounted()
   const { data: session, status } = useSession()
+
+  if (!mounted) {
+    return (
+      <span
+        className="hidden sm:inline-block w-[140px] h-[30px]"
+        aria-hidden
+      />
+    )
+  }
 
   if (status === 'loading') {
     return (
-      <span className="hidden sm:inline-flex px-4 py-1.5 text-[11px] font-body tracking-[0.18em] uppercase text-cream/40">
-        ...
-      </span>
+      <span className="hidden sm:inline-block w-[140px] h-[30px]" aria-hidden />
     )
   }
 

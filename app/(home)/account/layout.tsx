@@ -8,7 +8,7 @@ export default async function AccountLayout({
   children: React.ReactNode
 }) {
   const session = await auth()
-  if (!session?.user) redirect('/login')
+  if (!session?.user) redirect('/login?callbackUrl=/account')
 
   return (
     <div className="min-h-screen bg-void text-cream pt-24 pb-24 px-6 lg:px-12">

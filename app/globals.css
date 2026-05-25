@@ -65,6 +65,12 @@
   animation: scroll-line 2s ease-in-out infinite;
 }
 
+.aurum-glow {
+  text-shadow:
+    0 0 20px rgba(245, 240, 232, 0.18),
+    0 0 48px rgba(200, 255, 0, 0.2);
+}
+
 @layer components {
   .input-field {
     @apply w-full bg-void border border-cream/15 rounded-lg px-4 py-3 text-sm text-cream placeholder:text-cream/30 focus:outline-none focus:border-cream/40;

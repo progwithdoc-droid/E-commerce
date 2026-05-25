@@ -158,92 +158,92 @@
   - [X] app/(home)/account/wishlist/page.tsx — grid, Move to Cart button
   - [X] actions/account.ts — updateProfile, changePassword, address CRUD, toggleWishlist
 
-### 4. Admin Dashboard [ ]
+### 4. Admin Dashboard [X]
 
-- [] Admin auth guard in app/(admin)/layout.tsx — role === 'ADMIN' check
-- [] Layout and Structure:
-  - [] app/(admin)/layout.tsx — AdminSidebar + main content area
-  - [] components/admin/AdminSidebar.tsx — fixed sidebar, nav links with Lucide icons, collapse on mobile
-  - [] Responsive grid for dashboard widgets
-  - [] Loading states and error boundaries
-- [] Key Metrics Cards (components/admin/MetricCard.tsx):
-  - [] Total revenue with % change vs last period
-  - [] Total orders with % change
-  - [] Total customers with % change
-  - [] Average order value with % change
-- [] Sales Analytics:
-  - [] Revenue Chart (components/admin/RevenueChart.tsx):
-    - [] Recharts LineChart, daily revenue last 30 days
-    - [] Period filter: 7D / 30D / 90D / 1Y
-    - [] Dark theme, electric accent line stroke
-    - [] Dynamic import (ssr: false)
-  - [] Order Statistics (components/admin/OrdersChart.tsx):
-    - [] Recharts BarChart, order volume by day
-    - [] Status breakdown as stacked bars
-    - [] Same period filter controls
-- [] Recent Orders Table (components/admin/RecentOrdersTable.tsx):
-  - [] Columns: Order #, Customer, Items, Total, Status badge, Date, Actions
-  - [] Status colors: PENDING=amber, PROCESSING=blue, SHIPPED=purple, DELIVERED=green, CANCELLED=red
-  - [] Actions dropdown: View / Update Status / Refund
-  - [] Sorting and filtering
-- [ ] Low Stock Alerts (components/admin/LowStockAlerts.tsx):
-  - [ ] Products with stock < 10
-  - [ ] Quick restock action (update stock inline)
-  - [ ] Color-coded stock level indicators (red=0, amber<10, green>=10)
-- [ ] Top Products (components/admin/TopProducts.tsx):
-  - [ ] Best-selling products by quantity sold (last 30 days)
-  - [ ] Revenue per product
-  - [ ] Current stock status badge
-- [ ] Customer Insights (components/admin/CustomerInsights.tsx):
-  - [ ] New vs returning customers chart (Recharts)
-  - [ ] Customer acquisition over time
-  - [ ] Top 5 customers by total spend
-- [ ] Product Management:
-  - [ ] app/(admin)/admin/products/page.tsx — data table with @tanstack/react-table
-  - [ ] components/admin/ProductsTable.tsx — bulk select, search, Add Product button
-  - [ ] components/admin/ProductFormModal.tsx — shadcn Dialog, RHF + Zod, UploadThing images
-  - [ ] app/(admin)/admin/products/[id]/page.tsx — edit mode
-  - [ ] lib/uploadthing.ts + app/api/uploadthing/route.ts
-  - [ ] actions/product.actions.ts — getProducts, getProductBySlug, createProduct, updateProduct, deleteProduct, updateStock
-- [ ] Order Management:
-  - [ ] app/(admin)/admin/orders/page.tsx — full orders table, filter by status + date range
-  - [ ] components/admin/OrdersTable.tsx — @tanstack/react-table
-  - [ ] app/(admin)/admin/orders/[id]/page.tsx — full order detail, status update, refund
-  - [ ] actions/admin.actions.ts — getAllOrders, getOrderById, updateOrderStatus, issueRefund
-- [ ] User Management:
-  - [ ] app/(admin)/admin/customers/page.tsx — customers table with order count + total spent
-  - [ ] components/admin/CustomersTable.tsx — search, actions
-  - [ ] app/(admin)/admin/customers/[id]/page.tsx — profile, stats, order history
-  - [ ] components/admin/EmailComposeModal.tsx — send email via Resend
-  - [ ] actions/admin.actions.ts — getAllCustomers, getCustomerById, sendCustomerEmail, suspendCustomer
+- [X] Admin auth guard in app/(admin)/layout.tsx — role === 'ADMIN' check
+- [X] Layout and Structure:
+  - [X] app/(admin)/layout.tsx — AdminSidebar + main content area
+  - [X] components/admin/AdminSidebar.tsx — fixed sidebar, nav links with Lucide icons, collapse on mobile
+  - [X] Responsive grid for dashboard widgets
+  - [X] Loading states and error boundaries
+- [X] Key Metrics Cards (components/admin/MetricCard.tsx):
+  - [X] Total revenue with % change vs last period
+  - [X] Total orders with % change
+  - [X] Total customers with % change
+  - [X] Average order value with % change
+- [X] Sales Analytics:
+  - [X] Revenue Chart (components/admin/RevenueChart.tsx):
+    - [X] Recharts LineChart, daily revenue last 30 days
+    - [X] Period filter: 7D / 30D / 90D / 1Y
+    - [X] Dark theme, electric accent line stroke
+    - [X] Dynamic import (ssr: false)
+  - [X] Order Statistics (components/admin/OrdersChart.tsx):
+    - [X] Recharts BarChart, order volume by day
+    - [X] Status breakdown as stacked bars
+    - [X] Same period filter controls
+- [X] Recent Orders Table (components/admin/RecentOrdersTable.tsx):
+  - [X] Columns: Order #, Customer, Items, Total, Status badge, Date, Actions
+  - [X] Status colors: PENDING=amber, PROCESSING=blue, SHIPPED=purple, DELIVERED=green, CANCELLED=red
+  - [X] Actions dropdown: View / Update Status / Refund
+  - [X] Sorting and filtering
+- [X] Low Stock Alerts (components/admin/LowStockAlerts.tsx):
+  - [X] Products with stock < 10
+  - [X] Quick restock action (update stock inline)
+  - [X] Color-coded stock level indicators (red=0, amber<10, green>=10)
+- [X] Top Products (components/admin/TopProducts.tsx):
+  - [X] Best-selling products by quantity sold (last 30 days)
+  - [X] Revenue per product
+  - [X] Current stock status badge
+- [X] Customer Insights (components/admin/CustomerInsights.tsx):
+  - [X] New vs returning customers chart (Recharts)
+  - [X] Customer acquisition over time
+  - [X] Top 5 customers by total spend
+- [X] Product Management:
+  - [X] app/(admin)/admin/products/page.tsx — data table with @tanstack/react-table
+  - [X] components/admin/ProductsTable.tsx — bulk select, search, Add Product button
+  - [X] components/admin/ProductFormModal.tsx — modal, RHF + Zod, UploadThing images
+  - [X] app/(admin)/admin/products/[id]/page.tsx — edit mode
+  - [X] lib/uploadthing.ts + app/api/uploadthing/route.ts
+  - [X] actions/product.actions.ts — getProducts, getProductBySlug, createProduct, updateProduct, deleteProduct, updateStock
+- [X] Order Management:
+  - [X] app/(admin)/admin/orders/page.tsx — full orders table, filter by status + date range
+  - [X] components/admin/OrdersTable.tsx — @tanstack/react-table
+  - [X] app/(admin)/admin/orders/[id]/page.tsx — full order detail, status update, refund
+  - [X] actions/admin.ts — getAllOrders, getOrderById, updateOrderStatus, issueRefund
+- [X] User Management:
+  - [X] app/(admin)/admin/customers/page.tsx — customers table with order count + total spent
+  - [X] components/admin/CustomersTable.tsx — search, actions
+  - [X] app/(admin)/admin/customers/[id]/page.tsx — profile, stats, order history
+  - [X] components/admin/EmailComposeModal.tsx — send email via Resend
+  - [X] actions/admin.ts — getAllCustomers, getCustomerById, sendCustomerEmail, suspendCustomer
 
-### 5. Advanced Features [ ]
+### 5. Advanced Features [X]
 
-- [ ] Search Modal (components/home/SearchModal.tsx):
-  - [ ] Full-screen overlay, Framer Motion fade+scale
-  - [ ] Debounced search (300ms), calls searchProducts server action
-  - [ ] Keyboard navigation (arrows, Enter, Esc)
-  - [ ] Recent searches in localStorage
-  - [ ] Cmd+K shortcut wired in Header.tsx
-- [ ] Email System (Resend + React Email):
-  - [ ] emails/OrderConfirmation.tsx — items table, shipping address, order total, CTA
-  - [ ] emails/ShippingUpdate.tsx — tracking number, estimated delivery
-  - [ ] emails/WelcomeEmail.tsx — brand intro, Shop CTA
-  - [ ] emails/PasswordReset.tsx — reset link
-  - [ ] lib/email.ts — sendOrderConfirmation, sendShippingUpdate, sendWelcomeEmail, sendPasswordReset
-  - [ ] lib/resend.ts — Resend singleton
-- [ ] Performance Optimization:
-  - [ ] unstable_cache on getProducts, getFeaturedProducts, getCategories
-  - [ ] Tag-based revalidation: 'products' tag, 'orders' tag
-  - [ ] loading.tsx skeletons for all major segments
-  - [ ] Dynamic imports for Recharts (ssr: false)
-  - [ ] React Suspense boundaries around all data-fetching sections
-- [ ] SEO:
-  - [ ] generateMetadata in all product + category pages
-  - [ ] JSON-LD review schema on product pages
-  - [ ] app/robots.ts — block /admin, /account, /api
-  - [ ] app/sitemap.ts — all products + categories
-  - [ ] Default og:image and site metadata in root layout
+- [X] Search Modal (components/home/SearchModal.tsx):
+  - [X] Full-screen overlay, Framer Motion fade+scale
+  - [X] Debounced search (300ms), calls searchProducts server action
+  - [X] Keyboard navigation (arrows, Enter, Esc)
+  - [X] Recent searches in localStorage
+  - [X] Cmd+K shortcut wired in Header.tsx
+- [X] Email System (Resend + React Email):
+  - [X] emails/OrderConfirmation.tsx — items table, shipping address, order total, CTA
+  - [X] emails/ShippingUpdate.tsx — tracking number, estimated delivery
+  - [X] emails/WelcomeEmail.tsx — brand intro, Shop CTA
+  - [X] emails/PasswordReset.tsx — reset link
+  - [X] lib/email.ts — sendOrderConfirmation, sendShippingUpdate, sendWelcomeEmail, sendPasswordReset
+  - [X] lib/resend.ts — Resend singleton
+- [X] Performance Optimization:
+  - [X] unstable_cache on getProducts, getFeaturedProducts, getCategories
+  - [X] Tag-based revalidation: 'products' tag, 'orders' tag
+  - [X] loading.tsx skeletons for all major segments
+  - [X] Dynamic imports for Recharts (ssr: false)
+  - [X] React Suspense boundaries around all data-fetching sections
+- [X] SEO:
+  - [X] generateMetadata in all product + category pages
+  - [X] JSON-LD review schema on product pages
+  - [X] app/robots.ts — block /admin, /account, /api
+  - [X] app/sitemap.ts — all products + categories
+  - [X] Default og:image and site metadata in root layout
 
 ### 6. Testing and Deployment [ ]
 

@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST="{}";
+self.__REACT_LOADABLE_MANIFEST='{"components\\\\admin\\\\DashboardCharts.tsx -> @/components/admin/OrdersChart":{"id":95672,"files":["static/chunks/5672.d02a7d5805a29131.js"]},"components\\\\admin\\\\DashboardCharts.tsx -> @/components/admin/RevenueChart":{"id":53927,"files":["static/chunks/3927.f70bc70668771b4a.js"]}}';

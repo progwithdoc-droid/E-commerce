@@ -1,4 +1,5 @@
 import { Suspense } from 'react'
+import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
 import { getCategories, getProducts } from '@/app/actions/products'
@@ -12,6 +13,24 @@ type SearchParams = Promise<{
   sort?: string
   page?: string
 }>
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: SearchParams
+}): Promise<Metadata> {
+  const params = await searchParams
+  const title = params.category
+    ? `Shop ${params.category} — AURUM STORE`
+    : params.search
+      ? `Search: ${params.search} — AURUM STORE`
+      : 'Shop — AURUM STORE'
+  const description = params.search
+    ? `Search results for ${params.search} in AURUM collections.`
+    : 'Browse premium apparel and accessories from AURUM.'
+
+  return { title, description }
+}
 
 export default async function ProductsPage({
   searchParams,
@@ -32,6 +51,11 @@ export default async function ProductsPage({
     <main className="min-h-screen bg-void pt-24 pb-24 px-6 lg:px-12">
       <div className="max-w-7xl mx-auto">
         <h1 className="font-heading text-5xl text-cream tracking-wider mb-2">SHOP</h1>
+        {params.search ? (
+          <p className="text-cream/50 text-sm font-body mb-2">
+            Results for &ldquo;{params.search}&rdquo;
+          </p>
+        ) : null}
         <p className="text-cream/50 text-sm font-body mb-10">{total} products</p>
 
         <div className="flex flex-col lg:flex-row gap-10">

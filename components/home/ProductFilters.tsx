@@ -1,12 +1,14 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useState } from 'react'
 
 type Category = { id: string; name: string; slug: string }
 
 export function ProductFilters({ categories }: { categories: Category[] }) {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const [searchInput, setSearchInput] = useState(searchParams.get('search') ?? '')
 
   function update(key: string, value: string | null) {
     const params = new URLSearchParams(searchParams.toString())
@@ -16,8 +18,23 @@ export function ProductFilters({ categories }: { categories: Category[] }) {
     router.push(`/products?${params.toString()}`)
   }
 
+  function submitSearch(e: React.FormEvent) {
+    e.preventDefault()
+    update('search', searchInput.trim() || null)
+  }
+
   return (
     <aside className="w-full lg:w-56 shrink-0 space-y-8">
+      <form onSubmit={submitSearch}>
+        <h3 className="text-[11px] tracking-[0.2em] uppercase text-cream/50 mb-4">Search</h3>
+        <input
+          type="search"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          placeholder="Product name…"
+          className="input-field text-sm py-2"
+        />
+      </form>
       <div>
         <h3 className="text-[11px] tracking-[0.2em] uppercase text-cream/50 mb-4">Category</h3>
         <ul className="space-y-2">
